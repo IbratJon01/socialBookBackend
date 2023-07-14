@@ -3,24 +3,19 @@ package com.example.demo.Controller;
 import com.example.demo.Entety.Users;
 import com.example.demo.Repository.SubscriptionRepository;
 import com.example.demo.Repository.UserRepo;
-import com.example.demo.Service.UserSerivse;
 import com.example.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/users")
 public class UsersController {
 
-    UserSerivse userSerivse;
-
-    @Autowired
-    public void UserController(UserSerivse userSerivse) {
-        this.userSerivse = userSerivse;
-    }
     @Autowired
     UserService userService;
 
@@ -46,16 +41,29 @@ public class UsersController {
 
     }
 
-    @PostMapping("/{subscriberId}/subscribe/{subscribedToId}")
-    public ResponseEntity<String> subscribeUser(
-            @PathVariable Long subscriberId,
-            @PathVariable Long subscribedToId
-    ) {
-        userSerivse.subscribe(subscriberId, subscribedToId);
-        return new ResponseEntity<>("Subscribed successfully", HttpStatus.OK);
+
+    @GetMapping("/all")
+    public List<Users> getAllUsers() {
+        return userService.getAllUsers();
     }
 
 
-}
+    @GetMapping("/{id}/subscribers")
+    public ResponseEntity<Set<Users>> getSubscribers(@PathVariable("id") Long id) {
+        Set<Users> subscribers = userService.findSubscribedUsers(id);
+        return ResponseEntity.ok(subscribers);
+    }
 
-//44min
+
+
+    @PostMapping("/{subscriberId}/subscribe/{subscriptionId}")
+    public ResponseEntity<String> subscribeUser(
+            @PathVariable("subscriberId") Long subscriberId,
+            @PathVariable("subscriptionId") Long subscriptionId) {
+        userService.subscribeUser(subscriberId, subscriptionId);
+        return ResponseEntity.ok("User subscribed successfully.");
+    }
+
+
+
+}

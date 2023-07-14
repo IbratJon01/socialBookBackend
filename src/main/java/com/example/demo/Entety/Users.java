@@ -1,13 +1,14 @@
 package com.example.demo.Entety;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import org.apache.catalina.User;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 @Entity(name="Users")
 public class Users {
@@ -21,30 +22,50 @@ public class Users {
     private  String name ;
     private String profileImage;
 
+    @JsonManagedReference
+
+    @JsonIgnoreProperties("subscribers")
+    @ManyToMany(mappedBy = "subscriptions")
+    private Set<Users> subscribers = new HashSet<>();
+
     @ManyToMany
     @JoinTable(
-            name = "subscriptions",
+            name = "user_subscriptions",
             joinColumns = @JoinColumn(name = "subscriber_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscribed_to_id")
+            inverseJoinColumns = @JoinColumn(name = "subscription_id")
     )
-    private Set<User> subscriptions = new HashSet<>();
+    private Set<Users> subscriptions = new HashSet<>();
 
 
+    public Users() {
+    // Bo'sh boshlang'ich konstruktor
+}
 
-
-    public Set<User> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(Set<User> subscriptions) {
+    public Users(int id, @NotNull String userId, String userName, String name, String profileImage, Set<Users> subscribers, Set<Users> subscriptions) {
+        this.id = id;
+        this.userId = userId;
+        this.userName = userName;
+        this.name = name;
+        this.profileImage = profileImage;
+        this.subscribers = subscribers;
         this.subscriptions = subscriptions;
     }
 
-    public Users(){
-        super();
+    public Set<Users> getSubscribers() {
+        return subscribers;
     }
 
+    public void setSubscribers(Set<Users> subscribers) {
+        this.subscribers = subscribers;
+    }
 
+    public Set<Users> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<Users> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
     public int getId() {
         return id;
     }
