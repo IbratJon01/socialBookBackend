@@ -1,14 +1,18 @@
 package com.example.demo.Service;
 
+import com.example.demo.Entety.Follower;
+import com.example.demo.Entety.Following;
 import com.example.demo.Entety.Users;
 
+import com.example.demo.Repository.FollowerRepository;
+import com.example.demo.Repository.FollowingRepository;
 import com.example.demo.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 
 @Service
@@ -16,31 +20,67 @@ public class UserService {
     @Autowired
     UserRepo userRepo;
 
+    private final UserRepo userRepository;
+    private final FollowingRepository followingRepository;
+    private final FollowerRepository followerRepository;
+
+    public UserService(UserRepo userRepository, FollowingRepository followingRepository, FollowerRepository followerRepository) {
+        this.userRepository = userRepository;
+        this.followingRepository = followingRepository;
+        this.followerRepository = followerRepository;
+    }
+
+
+
+    public Users createUsersALl(Users users){
+        return userRepository.save(users);
+
+    }
+
+    public void followUser(Long userId, Long followingUserId) {
+        Users user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Users followingUser = userRepository.findById(followingUserId).orElseThrow(() -> new IllegalArgumentException("Following user not found"));
+
+        Following following = new Following();
+        following.setUsers(user);
+        following.setFollowingUser(followingUser);
+        followingRepository.save(following);
+
+        Follower follower = new Follower();
+        follower.setUsers(followingUser);
+        follower.setFollowerUser(user);
+        followerRepository.save(follower);
+    }
+
+    public List<Users> getFollowingUsers(Long userId) {
+        Users user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<Following> followingList = followingRepository.findByUsers(user);
+        List<Users> followingUsers = new ArrayList<>();
+        for (Following following : followingList) {
+            followingUsers.add(following.getFollowingUser());
+        }
+        return followingUsers;
+    }
+
+    public List<Users> getFollowerUsers(Long userId) {
+        Users user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<Follower> followerList = followerRepository.findByUsers(user);
+        List<Users> followerUsers = new ArrayList<>();
+        for (Follower follower : followerList) {
+            followerUsers.add(follower.getFollowerUser());
+        }
+        return followerUsers;
+    }
+
+    //__________________________________________________________________________________________
+
+
     public Users findByUsername(String userName) {
         return userRepo.findByUserName(userName);
     }
 
 
-    public Set<Users> findSubscribedUsers(Long id) {
-        Users user = userRepo.findById(Math.toIntExact(id)).orElse(null);
 
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return new HashSet<>(user.getSubscribers());
-    }
-
-    public void subscribeUser(Long subscriberId, Long subscriptionId) {
-        Users subscriber = userRepo.findById(Math.toIntExact(subscriberId)).orElse(null);
-        Users subscription = userRepo.findById(Math.toIntExact(subscriptionId)).orElse(null);
-
-        if (subscriber == null || subscription == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        subscriber.getSubscriptions().add(subscription);
-        userRepo.save(subscriber);
-    }
     public Users submitMetaDataOfUser(Users user){
         return userRepo.save(user);
     }
@@ -48,14 +88,14 @@ public class UserService {
     public Users displayUserMetaData(String userid){
         return userRepo.findByUserId(userid);
     }
-    public Users findId(Long id){
+    public Optional<Users> findId(Long id){
         return userRepo.findById(id);
     }
 
     public List<Users> getAllUsers() {
-        return (List<Users>) userRepo.findAll();
+        return  userRepo.findAll();
     }
-    public Users getUserByUsername(String userName) {
+    public Users getUserName(String userName) {
         return userRepo.findByUserName(userName); //users name select
     }
 

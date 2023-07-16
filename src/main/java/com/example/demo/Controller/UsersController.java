@@ -1,15 +1,12 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Entety.Users;
-import com.example.demo.Repository.SubscriptionRepository;
 import com.example.demo.Repository.UserRepo;
 import com.example.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -22,12 +19,10 @@ public class UsersController {
     @Autowired
     UserRepo userRepo;
 
-    @Autowired
-    SubscriptionRepository subscriptionRepository;
 
     @GetMapping("/{username}/name")
     public Users getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+        return userService.getUserName(username);
     }
 
     @PostMapping("")
@@ -47,22 +42,21 @@ public class UsersController {
         return userService.getAllUsers();
     }
 
-
-    @GetMapping("/{id}/subscribers")
-    public ResponseEntity<Set<Users>> getSubscribers(@PathVariable("id") Long id) {
-        Set<Users> subscribers = userService.findSubscribedUsers(id);
-        return ResponseEntity.ok(subscribers);
+    @PostMapping("/{userId}/follow/{followingUserId}")
+    public void followUser(@PathVariable Long userId, @PathVariable Long followingUserId) {
+        userService.followUser(userId, followingUserId);
     }
 
-
-
-    @PostMapping("/{subscriberId}/subscribe/{subscriptionId}")
-    public ResponseEntity<String> subscribeUser(
-            @PathVariable("subscriberId") Long subscriberId,
-            @PathVariable("subscriptionId") Long subscriptionId) {
-        userService.subscribeUser(subscriberId, subscriptionId);
-        return ResponseEntity.ok("User subscribed successfully.");
+    @GetMapping("/{userId}/following")
+    public List<Users> getFollowingUsers(@PathVariable Long userId) {
+        return userService.getFollowingUsers(userId);
     }
+
+    @GetMapping("/{userId}/followers")
+    public List<Users> getFollowerUsers(@PathVariable Long userId) {
+        return userService.getFollowerUsers(userId);
+    }
+
 
 
 

@@ -1,76 +1,50 @@
 package com.example.demo.Entety;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+import java.util.Objects;
+
 
 @Entity(name="Users")
 public class Users {
     @Id
     @GeneratedValue
-    private  int id;
+    private  Long id;
 
     @NotNull
     private  String userId;
     private  String userName;
     private  String name ;
     private String profileImage;
+    private String bio;
 
-    @JsonManagedReference
 
-    @JsonIgnoreProperties("subscribers")
-    @ManyToMany(mappedBy = "subscriptions")
-    private Set<Users> subscribers = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "subscriber_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscription_id")
-    )
-    private Set<Users> subscriptions = new HashSet<>();
+
 
 
     public Users() {
     // Bo'sh boshlang'ich konstruktor
 }
 
-    public Users(int id, @NotNull String userId, String userName, String name, String profileImage, Set<Users> subscribers, Set<Users> subscriptions) {
+
+    public Users(Long id, @NotNull String userId, String userName, String name, String profileImage, String bio) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
         this.name = name;
         this.profileImage = profileImage;
-        this.subscribers = subscribers;
-        this.subscriptions = subscriptions;
+        this.bio = bio;
     }
 
-    public Set<Users> getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(Set<Users> subscribers) {
-        this.subscribers = subscribers;
-    }
-
-    public Set<Users> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(Set<Users> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -105,4 +79,27 @@ public class Users {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Users users = (Users) o;
+        return Objects.equals(id, users.id) && Objects.equals(userId, users.userId) && Objects.equals(userName, users.userName) && Objects.equals(name, users.name) && Objects.equals(profileImage, users.profileImage) && Objects.equals(bio, users.bio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, userName, name, profileImage, bio);
+    }
+
+
 }

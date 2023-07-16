@@ -41,4 +41,10 @@ public class StatusController {
         return statusRepo.findByUserId(userId);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String deletePostById(@PathVariable int id) {
+        statusRepo.deleteById(id);
+        return "Post with ID " + id + " has been deleted.";
+    }
+
 }
