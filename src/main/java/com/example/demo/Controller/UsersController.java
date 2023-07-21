@@ -4,6 +4,7 @@ import com.example.demo.Entety.Users;
 import com.example.demo.Repository.UserRepo;
 import com.example.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +21,10 @@ public class UsersController {
     UserRepo userRepo;
 
 
-    @GetMapping("/{username}/name")
-    public Users getUserByUsername(@PathVariable String username) {
-        return userService.getUserName(username);
-    }
+//    @GetMapping("/{username}/name")
+//    public Users getUserByUsername(@PathVariable String username) {
+//        return userService.getUserName(username);
+//    }
 
     @PostMapping("")
     private Users submitUser(@RequestBody Users users){
@@ -58,6 +59,15 @@ public class UsersController {
     }
 
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Users>> searchUsersByUsername(@RequestParam String userName) {
+        List<Users> users = userService.searchUsersByUsername(userName);
+        if (!users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 }

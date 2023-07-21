@@ -95,10 +95,22 @@ public class UserService {
     public List<Users> getAllUsers() {
         return  userRepo.findAll();
     }
-    public Users getUserName(String userName) {
-        return userRepo.findByUserName(userName); //users name select
+//    public Users getUserName(String userName) {
+//        return userRepo.findByUserName(userName); //users name select
+//    }
+
+
+    public List<Users> searchUsersByUsername(String userName) {
+        List<Users> users = userRepository.findAll();
+        List<Users> matchingUsers = new ArrayList<>();
+
+        for (Users user : users) {
+            if (user.getUserName().toLowerCase().contains(userName.toLowerCase())) {
+                matchingUsers.add(user);
+            }
+        }
+
+        return matchingUsers;
     }
-
-
 
 }
