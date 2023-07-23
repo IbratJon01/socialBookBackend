@@ -11,4 +11,7 @@ import java.util.List;
 @Repository
 public interface FollowingRepository extends JpaRepository<Following, Long> {
     List<Following> findByUsers(Users users);
+
+    // Foydalanuvchi (A)ning idsi va foydalanuvchi (B)ning idsi bilan "Following" entitilarni qidirish uchun metod
+    Following findByUsersIdAndFollowingUserId(Long usersId, Long followingUserId);
 }
