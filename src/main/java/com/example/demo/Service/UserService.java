@@ -62,6 +62,16 @@ public class UserService {
         return followingUsers;
     }
 
+    public List<Users> getFollowingUsersUserId(String userId) {
+        Users user = userRepository.findByUserId(userId);
+        List<Following> followingList = followingRepository.findByUsers(user);
+        List<Users> followingUsers = new ArrayList<>();
+        for (Following following : followingList) {
+            followingUsers.add(following.getFollowingUser());
+        }
+        return followingUsers;
+    }
+
     public List<Users> getFollowerUsers(Long userId) {
         Users user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<Follower> followerList = followerRepository.findByUsers(user);

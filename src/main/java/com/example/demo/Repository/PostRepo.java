@@ -16,5 +16,6 @@ public interface PostRepo extends CrudRepository<Post , Integer> {
     // bitta userga tegishli postlarni olib beradi
 
     List<Post> findByUserId(String userId);
+    List<Post> findAllByUserId(String userId);
     Post findById(String postId);
 }

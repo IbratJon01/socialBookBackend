@@ -3,6 +3,7 @@ package com.example.demo.Repository;
 import com.example.demo.Entety.Users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,6 @@ public interface UserRepo extends JpaRepository<Users , Integer> {
     Users save(Users user);
     Users findByUserId(String userId);
 // Users findById(Long id);
-
 
     Optional<Users> findById(Long id);
 

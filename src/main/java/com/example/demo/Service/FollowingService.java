@@ -2,10 +2,13 @@ package com.example.demo.Service;
 
 import com.example.demo.Entety.Follower;
 import com.example.demo.Entety.Following;
+import com.example.demo.Entety.Users;
 import com.example.demo.Repository.FollowerRepository;
 import com.example.demo.Repository.FollowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FollowingService {
@@ -15,6 +18,7 @@ public class FollowingService {
 
     @Autowired
     private FollowerRepository followerRepository;
+
 
     public void unfollowUser(Long followingUserId, Long followerUserId) {
         // Following jadvalidan foydalanuvchi (followingUserId) va follower foydalanuvchi (followerUserId) uchun
