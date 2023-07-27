@@ -39,6 +39,7 @@ public class PostController {
 
     @PostMapping("")
     private Post submitUserPost(@RequestBody Post post){
+
         return postService.submitPostToDataBase(post);
     }
     @GetMapping("")
@@ -49,6 +50,7 @@ public class PostController {
     // bu bitta userga tegishli postlarni topib beradigan kod
     @GetMapping("/user/{userId}")
     public List<Post> getPostByUserId(@PathVariable String userId) {
+
         return postRepo.findByUserId(userId);
     }
     // bu bitta userga teg
@@ -68,7 +70,7 @@ public class PostController {
         // Yangilangan malumotlarni o'zgartirish
 
         existingPost.setPostPath(updatedPost.getPostPath());
-        existingPost.setTimestamp(updatedPost.getTimestamp());
+        existingPost.setLocalDate(updatedPost.getLocalDate());
         // Boshqa maydonlarni ham o'zgartirishingiz mumkin
 
         postRepo.save(existingPost);

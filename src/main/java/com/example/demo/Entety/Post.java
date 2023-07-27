@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity(name="Post")
 public class Post {
@@ -16,22 +17,52 @@ public class Post {
     private String userId;
     private String userName;
     private String postPath;
-    private Timestamp timestamp;
+    private LocalDate localDate;
     private int likeCount;
+    private String information ;
+    private String location;
+    private String file ;
 
     public Post(){
         super();
 
     }
 
-    public Post(int id, String postId, String userId, String userName, String postPath, Timestamp timestamp, int likeCount) {
+    public Post(int id, String postId, String userId, String userName, String postPath, LocalDate localDate, int likeCount, String information, String location, String file) {
         Id = id;
         this.postId = postId;
         this.userId = userId;
         this.userName = userName;
         this.postPath = postPath;
-        this.timestamp = timestamp;
+        this.localDate = localDate;
         this.likeCount = likeCount;
+        this.information = information;
+        this.location = location;
+        this.file = file;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public String getUserName() {
@@ -74,12 +105,12 @@ public class Post {
         this.postPath = postPath;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public LocalDate getLocalDate() {
+        return localDate;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
     }
 
     public int getLikeCount() {
