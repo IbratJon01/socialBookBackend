@@ -18,4 +18,6 @@ public interface PostRepo extends CrudRepository<Post , Integer> {
     List<Post> findByUserId(String userId);
     List<Post> findAllByUserId(String userId);
     Post findById(String postId);
+
+    Post findByPostId(String postId);
 }

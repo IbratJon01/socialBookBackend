@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/users")
-public class UsersController {
+public class UsersController<updatedUsers> {
 
     @Autowired
     UserService userService;
@@ -20,11 +20,22 @@ public class UsersController {
     @Autowired
     UserRepo userRepo;
 
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> updateUsersById(@PathVariable String userId , @RequestBody Users updatedUser ) {
+        Users existingUsers = userRepo.findByUserId(String.valueOf(userId));
+       if (existingUsers == null) {
+           return ResponseEntity.notFound().build();
+       }
+            existingUsers.setProfileImage(updatedUser.getProfileImage());
+            existingUsers.setUserName(updatedUser.getUserName());
+            existingUsers.setName(updatedUser.getName());
+            existingUsers.setBio(updatedUser.getBio());
 
-//    @GetMapping("/{username}/name")
-//    public Users getUserByUsername(@PathVariable String username) {
-//        return userService.getUserName(username);
-//    }
+        userRepo.save(existingUsers);
+        return ResponseEntity.ok("Post with ID " + userId + " has been updated.");
+
+    }
+
 
     @PostMapping("")
     private Users submitUser(@RequestBody Users users){
@@ -68,6 +79,13 @@ public class UsersController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteUsersByuserId(@PathVariable String userId) {
+        userRepo.deleteByUserId(userId);
+        return "Post with ID " + userId + " has been deleted.";
+    }
+
 
 
 }

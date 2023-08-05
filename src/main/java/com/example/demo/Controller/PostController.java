@@ -61,8 +61,8 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<String> updatePostById(@PathVariable long postId, @RequestBody Post updatedPost) {
-        Post existingPost = postRepo.findById(String.valueOf(postId));
+    public ResponseEntity<String> updatePostById(@PathVariable String postId, @RequestBody Post updatedPost) {
+        Post existingPost = postRepo.findByPostId(String.valueOf(postId));
         if (existingPost == null) {
             return ResponseEntity.notFound().build();
         }
@@ -70,7 +70,10 @@ public class PostController {
         // Yangilangan malumotlarni o'zgartirish
 
         existingPost.setPostPath(updatedPost.getPostPath());
-        existingPost.setLocalDate(updatedPost.getLocalDate());
+        existingPost.setFile(updatedPost.getFile());
+        existingPost.setLocation(updatedPost.getLocation());
+        existingPost.setInformation(updatedPost.getInformation());
+
         // Boshqa maydonlarni ham o'zgartirishingiz mumkin
 
         postRepo.save(existingPost);
