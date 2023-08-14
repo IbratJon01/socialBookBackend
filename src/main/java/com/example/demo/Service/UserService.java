@@ -2,15 +2,18 @@ package com.example.demo.Service;
 
 import com.example.demo.Entety.Follower;
 import com.example.demo.Entety.Following;
+import com.example.demo.Entety.Message;
 import com.example.demo.Entety.Users;
 
 import com.example.demo.Repository.FollowerRepository;
 import com.example.demo.Repository.FollowingRepository;
+import com.example.demo.Repository.MessageRepository;
 import com.example.demo.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,8 @@ public class UserService {
     @Autowired
     UserRepo userRepo;
 
+    @Autowired
+    private MessageRepository messageRepository;
     private final UserRepo userRepository;
     private final FollowingRepository followingRepository;
     private final FollowerRepository followerRepository;
@@ -31,8 +36,7 @@ public class UserService {
     }
 
 
-
-    public Users createUsersALl(Users users){
+    public Users createUsersALl(Users users) {
         return userRepository.save(users);
 
     }
@@ -90,20 +94,20 @@ public class UserService {
     }
 
 
-
-    public Users submitMetaDataOfUser(Users user){
+    public Users submitMetaDataOfUser(Users user) {
         return userRepo.save(user);
     }
 
-    public Users displayUserMetaData(String userid){
+    public Users displayUserMetaData(String userid) {
         return userRepo.findByUserId(userid);
     }
-    public Optional<Users> findId(Long id){
+
+    public Optional<Users> findId(Long id) {
         return userRepo.findById(id);
     }
 
     public List<Users> getAllUsers() {
-        return  userRepo.findAll();
+        return userRepo.findAll();
     }
 //    public Users getUserName(String userName) {
 //        return userRepo.findByUserName(userName); //users name select
@@ -122,5 +126,4 @@ public class UserService {
 
         return matchingUsers;
     }
-
 }

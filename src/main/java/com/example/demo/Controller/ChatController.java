@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Entety.ChatMessageRequest;
 import com.example.demo.Entety.ChatUserMessages;
 import com.example.demo.Entety.Message;
+import com.example.demo.Repository.MessageRepository;
 import com.example.demo.Service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,16 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @PostMapping("/send")
     public ResponseEntity<String> sendChatMessage(@RequestBody ChatMessageRequest request) {
         chatService.sendChatMessage(request.getSender(), request.getReceiver(), request.getContent());
         return ResponseEntity.ok("Message sent successfully.");
     }
 
-//    @GetMapping("/messages")
-//    public ResponseEntity<List<Message>> getChatMessages(@RequestParam String sender, @RequestParam String receiver) {
-//        List<Message> messages = chatService.getChatMessages(sender, receiver);
-//        return ResponseEntity.ok(messages);
-//    }
+
 
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getChatMessages(
@@ -35,13 +35,14 @@ public class ChatController {
         List<Message> messages = chatService.getChatMessagesBetweenUsers(user1, user2);
         return ResponseEntity.ok(messages);
     }
-//    @GetMapping("/messages/{username}")
-//    public ResponseEntity<ChatUserMessages> getUserChatMessages(@PathVariable String username) {
-//        ChatUserMessages userMessages = chatService.getUserChatMessages(username);
-//        return ResponseEntity.ok(userMessages);
-//    }
 
-
+    @GetMapping("/mark-as-read")
+    public ResponseEntity<List<Message>> markMessagesAsRead(
+            @RequestParam String user1, @RequestParam String user2) {
+        List<Message> messages = chatService.markMessagesAsReadBetweenUsers(user1, user2);
+        return ResponseEntity.ok(messages);
+    }
+    // xabar yozgan va yozilgan barcha userlarni ruyxati
     @GetMapping("/allmessages/{username}")
     public ResponseEntity<ChatUserMessages> getUserChatMessages(@PathVariable String username) {
         ChatUserMessages userMessages = chatService.getUserChatMessages(username);
@@ -50,5 +51,11 @@ public class ChatController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deletePostById(@PathVariable Long id) {
+        messageRepository.deleteById(id);
+        return "Post with ID " + id + " has been deleted.";
     }
 }

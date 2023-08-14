@@ -28,20 +28,12 @@ public class ChatService {
             message.setReceiver(receiver);
             message.setContent(content);
             message.setTimestamp(new Date());
+            message.setRead(false);
             messageRepository.save(message);
+
         }
     }
 
-//    public List<Message> getChatMessages(String senderUsername, String receiverUsername) {
-//        Users sender = userRepository.findByUserName(senderUsername);
-//        Users receiver = userRepository.findByUserName(receiverUsername);
-//
-//        if (sender != null && receiver != null) {
-//            return messageRepository.findBySenderAndReceiverOrderByTimestampAsc(sender, receiver);
-//        }
-//
-//        return Collections.emptyList();
-//    }
 
     public List<Message> getChatMessagesBetweenUsers(String user1Username, String user2Username) {
         Users user1 = userRepository.findByUserName(user1Username);
@@ -62,49 +54,7 @@ public class ChatService {
         return Collections.emptyList();
     }
 
-    // Yozishgan chatlar ruyxati
-
-//    public ChatUserMessages getUserChatMessages(String username) {
-//        Users user = userRepository.findByUserName(username);
-//        if (user != null) {
-//            List<Message> sentMessages = messageRepository.findBySenderOrderByTimestampAsc(user);
-//            List<Users> sentToUsers = sentMessages.stream()
-//                    .map(Message::getReceiver)
-//                    .collect(Collectors.toList());
-//
-//            List<Message> receivedMessages = messageRepository.findByReceiverOrderByTimestampAsc(user);
-//            List<Users> receivedFromUsers = receivedMessages.stream()
-//                    .map(Message::getSender)
-//                    .collect(Collectors.toList());
-//
-//            ChatUserMessages userMessages = new ChatUserMessages();
-//            userMessages.setSentToUsers(sentToUsers);
-//            userMessages.setReceivedFromUsers(receivedFromUsers);
-//
-//            return userMessages;
-//        }
-//        return null;
-//    }
-
-
-//    public ChatUserMessages getChatUserMessages(String username) {
-//        List<Message> sentMessages = messageRepository.findBySenderOrderByTimestampAsc(userRepository.findByUserName(username));
-//        List<Users> sentToUsers = sentMessages.stream()
-//                .map(Message::getReceiver)
-//                .collect(Collectors.toList());
-//
-//        List<Message> receivedMessages = messageRepository.findByReceiverOrderByTimestampAsc(userRepository.findByUserName(username));
-//        List<Users> receivedFromUsers = receivedMessages.stream()
-//                .map(Message::getSender)
-//                .collect(Collectors.toList());
-//
-//        ChatUserMessages userMessages = new ChatUserMessages();
-//        userMessages.setSentToUsers(sentToUsers);
-//        userMessages.setReceivedFromUsers(receivedFromUsers);
-//
-//        return userMessages;
-//    }
-public ChatUserMessages getUserChatMessages(String username) {
+    public ChatUserMessages getUserChatMessages(String username) {
     Users user = userRepository.findByUserName(username);
     if (user != null) {
         List<Message> sentMessages = messageRepository.findBySenderOrderByTimestampAsc(user);
@@ -137,4 +87,14 @@ public ChatUserMessages getUserChatMessages(String username) {
     }
     return null;
 }
+
+
+    public List<Message> markMessagesAsReadBetweenUsers(String user1, String user2) {
+        List<Message> messages = messageRepository.findUnreadMessagesBetweenUsers(user1, user2);
+        for (Message message : messages) {
+            message.setRead(true);
+            messageRepository.save(message);
+        }
+        return messages;
+    }
 }

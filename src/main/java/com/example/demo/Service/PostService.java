@@ -37,6 +37,9 @@ public class PostService {
     public Post submitPostToDataBase(Post post){
         return postRepo.save(post);
     }
+
+
+
     public ArrayList<Post> retrievePostFromDB(){
         ArrayList<Post> postList=postRepo.findAll();
 

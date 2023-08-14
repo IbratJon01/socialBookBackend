@@ -17,6 +17,16 @@ public class Message {
     private String content;
     private Date timestamp;
 
+    private boolean isRead;
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     public Long getId() {
         return id;
     }
