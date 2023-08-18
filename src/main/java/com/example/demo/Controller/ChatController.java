@@ -35,6 +35,13 @@ public class ChatController {
         List<Message> messages = chatService.getChatMessagesBetweenUsers(user1, user2);
         return ResponseEntity.ok(messages);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<Message>> searchMessagesByContent(
+            @RequestParam String user1, @RequestParam String user2 , @RequestParam String content) {
+        List<Message> messages = chatService.searchMessagesByContent(user1, user2,content);
+
+        return ResponseEntity.ok(messages);
+    }
 
     @GetMapping("/mark-as-read")
     public ResponseEntity<List<Message>> markMessagesAsRead(
@@ -51,7 +58,18 @@ public class ChatController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }//getUserChatMessagesRead
+
+//    @GetMapping("/new/{username}")
+//    public ResponseEntity<ChatUserMessagesIsRead> getUserChatMessagesNew(@PathVariable String username) {
+//        ChatUserMessagesIsRead userMessages = chatService.getUserChatMessagesRead(username);
+//        if (userMessages != null) {
+//           return ResponseEntity.ok(userMessages);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//    }
 
     @DeleteMapping("/delete/{id}")
     public String deletePostById(@PathVariable Long id) {
